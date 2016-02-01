@@ -230,7 +230,7 @@ buildUaacRequest = (req)->
   familyName = if(identityProvider!="uaa") then services["cloud_foundry_api-default-email-domain"].value else lowerId
   uaacRequest =
     "schemas":["urn:scim:schemas:core:1.0"]
-    "userName":email
+    "userName":lowerId
     "name":
       "familyName": "#{familyName}"
       "givenName": "#{givenName}"
