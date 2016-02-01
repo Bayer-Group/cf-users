@@ -96,12 +96,10 @@ doRole = (method,token,level,levelGuid,associationType,associationGuid)->
         resolve
           status : response.statusCode
       else if(!error)
-        console.log("statusCode="+response.statusCode)
         reject
           status : 500
           body: response
       else
-        console.log("statusCode="+response.statusCode + " error="+error);
         reject
           status : 500
           body : error
