@@ -88,15 +88,20 @@ doRole = (method,token,level,levelGuid,associationType,associationGuid)->
       url: "https://#{services["cloud_foundry_api-domain"].value}/v2/#{level}/#{levelGuid}/#{associationType}/#{associationGuid}"
       headers: {'Authorization': token}
     requestjs options, (error,response,body) ->
-      if((!error)&& (response.statusCode == 201))
+      if((!error)&&(response.statusCode == 201))
         resolve
           status : response.statusCode
           body : JSON.parse(body)
+      else if((!error)&& (response.statusCode == 204))
+        resolve
+          status : response.statusCode
       else if(!error)
+        console.log("statusCode="+response.statusCode)
         reject
           status : 500
           body: response
       else
+        console.log("statusCode="+response.statusCode + " error="+error);
         reject
           status : 500
           body : error
