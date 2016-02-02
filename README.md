@@ -48,6 +48,7 @@ cf cups  cloud_foundry_api -p '{  "alias": "cloud_foundry_api",
                                   "portal-admin-pw" : "<administror user password  Base64 encoded>" ,
                                   "default-email-domain" : "<email domain of active directory users for example who@cloudfoundry.com would have an email domain of cloudfoundry.com>",
                                   "saml-provider" : "<saml provider name, this field is optional>" }'
+                                  "user-name-type" : "<type of username for login.  email or samaccountname}'
                                                              
 ```
 The guids can be retrieved utilizing the uaac users command.
