@@ -228,9 +228,21 @@ buildUaacRequest = (req)->
   givenName = userIdComponents[0]
   email = if (identityProvider!="uaa") then "#{lowerId}@#{services["cloud_foundry_api-default-email-domain"].value}" else lowerId
   familyName = if(identityProvider!="uaa") then services["cloud_foundry_api-default-email-domain"].value else lowerId
+
+  userNameType = switch(services["cloud_foundry_api-user-name-type"].value)
+    when "email" then email
+    when "samaccountname" then lowerId
+    else ""
+
+  if (userNameType == "") then console.log("User Name Type was not valid.  Defaulting to Email address.")
+
+  #console.log("User name type is",services["cloud_foundry_api-user-name-type"].value)
+  #console.log("Email is",email)
+  #console.log("SamAccountName is",lowerId)
+
   uaacRequest =
     "schemas":["urn:scim:schemas:core:1.0"]
-    "userName":lowerId
+    "userName": userNameType
     "name":
       "familyName": "#{familyName}"
       "givenName": "#{givenName}"
