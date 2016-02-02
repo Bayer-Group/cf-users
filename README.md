@@ -39,15 +39,16 @@ cf target -o <organization name> -s <space name>
 ## Create the user provided service for cloud_foundry_api
 ```
 cf cups  cloud_foundry_api -p '{  "alias": "cloud_foundry_api",
-                                  "domain": "<domain name for cloud foundry api rest services>",
-                                  "uaa-domain":"<domain name for uaa rest services>",
-                                  "login-domain" : "<domain name for login url for authentication>m",
+                                  "domain": "<domain name for cloud foundry api rest services for example domain.com>",
+                                  "uaa-domain":"<domain name for uaa rest services for example uaa.domain.com>",
+                                  "login-domain" : "<domain name for login url for authentication for example login.domain.com>",
                                   "uaa-client-id" : "<uaa client id Base64 encoded.>",
                                   "uaa-client-secret" : "<uaa client secret Base64 encoded>",
                                   "portal-admin-id" : "<administrator user id Base64 encoded>",
                                   "portal-admin-pw" : "<administror user password  Base64 encoded>" ,
                                   "default-email-domain" : "<email domain of active directory users for example who@cloudfoundry.com would have an email domain of cloudfoundry.com>",
                                   "saml-provider" : "<saml provider name, this field is optional>" }'
+                                  "user-name-type" : "<type of username for users created through cf-users.  email or samaccountname>" }'
                                                              
 ```
 The guids can be retrieved utilizing the uaac users command.
