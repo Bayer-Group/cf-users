@@ -21,14 +21,6 @@ ao.initOauth2 = ()->
     saveToken = (error, result) ->
       if (error)
         console.log 'Access Token Error', JSON.stringify(error,0,2)
-        console.log('clientID is', credentials.clientID.toString())
-        console.log('clientSecret is',credentials.clientSecret.toString())
-        console.log('Site is', credentials.site.toString())
-        console.log('Authorization path is', credentials.site.toString() + credentials.authorizationPath.toString())
-        console.log('Token path is', credentials.site.toString() + credentials.tokenPath.toString())
-        console.log('Revocation path is', credentials.site.toString() + credentials.revocationPath.toString())
-        console.log("Admin ID is #{services["cloud_foundry_api-portal-admin-id"].b64}")
-        console.log("Admin password is #{services["cloud_foundry_api-portal-admin-pw"].b64}")
         reject("error fetching access token")
       else
         ao.token = oauth2.accessToken.create(result);
