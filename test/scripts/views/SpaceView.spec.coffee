@@ -100,7 +100,7 @@ module.exports = describe 'SpaceView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.isSpaceManager).to.equal(false)
     expect(view.isOrgManager).to.equal(false);
     stub.restore()
@@ -135,7 +135,7 @@ module.exports = describe 'SpaceView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.isSpaceManager).to.equal(false)
     expect(view.isOrgManager).to.equal(true)
     stub.restore()
@@ -170,7 +170,7 @@ module.exports = describe 'SpaceView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.isSpaceManager).to.equal(true)
     expect(view.isOrgManager).to.equal(false)
     stub.restore()
@@ -206,7 +206,7 @@ module.exports = describe 'SpaceView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.$('.space-auditor:checked').length).to.equal(0);
     expect(view.$('.space-manager:checked').length).to.equal(0);
     expect(view.$('.space-developer:checked').length).to.equal(1);
@@ -243,7 +243,7 @@ module.exports = describe 'SpaceView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.$('.space-auditor:checked').length).to.equal(0);
     expect(view.$('.space-manager:checked').length).to.equal(1);
     expect(view.$('.space-developer:checked').length).to.equal(0);
@@ -279,7 +279,7 @@ module.exports = describe 'SpaceView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.$('.space-auditor:checked').length).to.equal(1);
     expect(view.$('.space-manager:checked').length).to.equal(0);
     expect(view.$('.space-developer:checked').length).to.equal(0);
@@ -305,7 +305,7 @@ module.exports = describe 'SpaceView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(3);
+    expect(view.$('tr').length).to.equal(3);
     expect(view.isSpaceManager).to.equal(false);
     expect(view.isOrgManager).to.equal(false);
     stub.restore()
