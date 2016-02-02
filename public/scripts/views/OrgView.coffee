@@ -48,6 +48,7 @@ module.exports = backbone.View.extend
         for orgUser in orgUserData[0].resources
           orgUsers[orgUser.entity.username] = true
         userViews = (new OrgUserView({host: @host,orgGuid : @orgGuid, userName: user.entity.username, userGuid : user.metadata.guid, isManager : managers[user.entity.username], isAuditor : auditors[user.entity.username], isOrgUser : orgUsers[user.entity.username], userIsOrgManager: @isOrgManager}) for user in userData[0].resources)
+
         userViews = userViews.filter (a) ->
           a.userName
         userViews.sort (a,b) ->

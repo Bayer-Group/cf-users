@@ -108,7 +108,7 @@ describe 'OrgView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody > tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
 
     expect(view.isOrgManager).to.equal(false)
     ajaxStub.restore()
@@ -176,7 +176,7 @@ describe 'OrgView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.$('.org-auditor:checked').length).to.equal(0);
     expect(view.$('.org-manager:checked').length).to.equal(0);
     expect(view.$('.org-user:checked').length).to.equal(1);
@@ -213,7 +213,7 @@ describe 'OrgView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.$('.org-auditor:checked').length).to.equal(0);
     expect(view.$('.org-manager:checked').length).to.equal(1);
     expect(view.$('.org-user:checked').length).to.equal(0);
@@ -249,7 +249,7 @@ describe 'OrgView ', () ->
       userName  : "userName"
 
     view.render()
-    expect(view.$('table > tbody >tr').length).to.equal(2);
+    expect(view.$('tr').length).to.equal(2);
     expect(view.$('.org-auditor:checked').length).to.equal(1);
     expect(view.$('.org-manager:checked').length).to.equal(0);
     expect(view.$('.org-user:checked').length).to.equal(0);

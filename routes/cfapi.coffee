@@ -239,7 +239,7 @@ buildUaacRequest = (req)->
     ]
     "approvals": [ ]
     "active": true
-    "verified": if(identityProvider=="uaa") then  "false" else "true"
+    "verified":  true
     "origin": identityProvider
   if (identityProvider=="uaa")
      uaacRequest["password"] = password

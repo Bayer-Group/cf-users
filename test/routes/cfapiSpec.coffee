@@ -141,7 +141,7 @@ describe 'cfapi  ', ->
         ]
         "approvals": []
         "active": true
-        "verified": "true"
+        "verified": true
         "origin": "ldap"
       uaaRequest =
         "schemas": [
@@ -158,7 +158,7 @@ describe 'cfapi  ', ->
         ],
         "approvals": [],
         "active": true,
-        "verified": "false",
+        "verified": true,
         "origin": "uaa",
         "password": "thePassword"
       samlRequest =
@@ -176,7 +176,7 @@ describe 'cfapi  ', ->
         ],
         "approvals": [],
         "active": true,
-        "verified": "true",
+        "verified": true,
         "origin": "saml",
         "externalId" : "user@email.domain.com"
 
