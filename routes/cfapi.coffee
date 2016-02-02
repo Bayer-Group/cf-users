@@ -234,9 +234,10 @@ buildUaacRequest = (req)->
     when "samaccountname" then lowerId
     else ""
 
-  if (userNameType == "") then console.log("User Name Type was not valid.  Defaulting to Email address.")
+  if (userNameType == "") then console.log("User Name Type was not valid.  Defaulting to Email address.");userNameType = email
 
-  #console.log("User name type is",services["cloud_foundry_api-user-name-type"].value)
+  #console.log("User name type in manifest is",services["cloud_foundry_api-user-name-type"].value)
+  #console.log("user name type in program is",userNameType)
   #console.log("Email is",email)
   #console.log("SamAccountName is",lowerId)
 
