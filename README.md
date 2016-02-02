@@ -12,7 +12,7 @@ uaac token client get <admin client name> -s <admin client secret>
 
 ##Create the client with the following uaac commands:
 ```
-uaac client add cf_users_client \
+uaac client add cf_portal_client \
  --authorities scim.write,scim.read,cloud_controller.read,cloud_controller.write,password.write,uaa.admin,uaa.resource,clo
 ud_controller.admin \
  --authorized_grant_types authorization_code,client_credentials,password \
@@ -20,8 +20,8 @@ ud_controller.admin \
  --scope openid,scim.write,scim.read,cloud_controller.read,cloud_controller.write,password.write,console.admin,console.sup
 port,cloud_controller.admin \
  -s <cf_users client secret>
-uaac client update cf_users_client --autoapprove true
-uaac client update cf_users_client --autoapprove true --authorized_grant_types authorization_code,client_credentials,pass
+uaac client update cf_portal_client --autoapprove true
+uaac client update cf_portal_client --autoapprove true --authorized_grant_types authorization_code,client_credentials,pass
 word,implicit
 ```
 
