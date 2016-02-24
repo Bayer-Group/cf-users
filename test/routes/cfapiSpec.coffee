@@ -217,6 +217,8 @@ describe 'cfapi  ', ->
   serviceBindings["cloud_foundry_api-uaa-domain"] = { value:"uaa.domain.com"}
   serviceBindings["cloud_foundry_api-domain"] = { value:"api.domain.com"}
   serviceBindings["cloud_foundry_api-default-email-domain"] = { value: "email.domain.com"}
+  serviceBindings["cloud_foundry_api-user-name-type"] = { value: "email"}
+
   refreshToken =  (method) ->
     method
       token:
