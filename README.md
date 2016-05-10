@@ -39,7 +39,7 @@ cf target -o <organization name> -s <space name>
 ## Create the user provided service for cloud_foundry_api
 ```
 cf cups  cloud_foundry_api -p '{  "alias": "cloud_foundry_api",
-                                  "domain": "<domain name for cloud foundry api rest services for example domain.com>",
+                                  "domain": "<domain name for cloud foundry api rest services for example api.domain.com>",
                                   "uaa-domain":"<domain name for uaa rest services for example uaa.domain.com>",
                                   "login-domain" : "<domain name for login url for authentication for example login.domain.com>",
                                   "uaa-client-id" : "<uaa client id Base64 encoded.>",
