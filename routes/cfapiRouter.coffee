@@ -17,6 +17,6 @@ router.delete '/:level/:levelGuid/:associationType/:associationGuid', cfapi.dele
 router.get '/users/:userGuid/:associationType', cfapi.listUserAssociation
 router.get '/:level/:levelGuid/:associationType', cfapi.listCfRequest
 router.get '/users', cfapi.allUsers
-router.get '/identityProviders/saml', cfapi.samlIdentityProviders
+router.get '/identityProviders/external', cfapi.externalIdentityProvider
 module.exports = router;
 

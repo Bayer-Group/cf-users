@@ -24,8 +24,8 @@ templateText = """<div class="container"><div class="row">
                   <div class="col-sm-1">&nbsp;</div>
                   <div class="col-sm-3"><input id="user-id" class="form-control user-id" type="text" /></div>
                   <div class="col-sm-2"><div class="identity-provider" id="identity-provider"></div></div>
-                  <div class="col-sm-3"><input id="password" class="form-control password" type="password" disabled data-toggle="tooltip" title="Password and Verify must match."/></div>
-                  <div class="col-sm-3"><input class="password2 form-control" type="password" disabled data-toggle="tooltip" title="Password and Verify must match."/></div>
+                  <div class="col-sm-3"><input id="password" class="form-control password" type="password" data-toggle="tooltip" title="Password and Verify must match."/></div>
+                  <div class="col-sm-3"><input class="password2 form-control" type="password" data-toggle="tooltip" title="Password and Verify must match."/></div>
               </div>
               <div class="row">
                   <div class="col-sm-12">&nbsp;</div>
@@ -73,7 +73,7 @@ module.exports = backbone.View.extend
          developer : true
          manager     : false
          auditor   : false
-       identityProvider : "ldap"
+       identityProvider : "uaa"
        spaces : []
   events :
      "change .user-id " : "changeUserId"
@@ -121,10 +121,10 @@ module.exports = backbone.View.extend
       url:"https://#{@host}/cf-users/cf-api/users/#{@userData.guid}/organizations"
     userIsOrgManagerRequest = $.ajax
       url : "https://#{@host}/cf-users/cf-api/users/#{@userData.guid}/managed_organizations"
-    samlProvidersRequest = $.ajax
-      url : "https://#{@host}/cf-users/cf-api/identityProviders/saml"
+    externalProvidersRequest = $.ajax
+      url : "https://#{@host}/cf-users/cf-api/identityProviders/external"
 
-    success = (orgData,managedOrgData,samlProviders) =>
+    success = (orgData,managedOrgData,externalProviders) =>
 
       @managedOrgs = {}
       for org in managedOrgData[0].resources
@@ -145,25 +145,26 @@ module.exports = backbone.View.extend
         allowClear : true
 
       identityProviders = [
-        { text : "Active Directory", id:"ldap"}
-        { text : "Cloud Foundry", id:"uaa"}
+       { text : "Cloud Foundry", id:"uaa"}
       ]
-      for identityProvider in samlProviders[0]
+ 
+      for identityProvider in externalProviders[0]
         identityProviders.push { text : identityProvider, id: identityProvider }
+
       @identityProviderSelect.select2
         data : identityProviders
         placeholder : "Select Identity "
         multiple : false
         allowClear : false
 
-      @identityProviderSelect.select2("val","ldap")
-      @identityProviderSelect.change($.proxy( @changeAdUser,@))
+      @identityProviderSelect.select2("val","uaa")
+      @identityProviderSelect.change($.proxy( @changeIdProvider,@))
 
     failure = (XMLHttpRequest, textStatus, errorThrown) =>
       spinner.unblockUI()
       @handleError(XMLHttpRequest, textStatus, errorThrown)
 
-    $.when(orgRequest,userIsOrgManagerRequest,samlProvidersRequest).then success, failure
+    $.when(orgRequest,userIsOrgManagerRequest,externalProvidersRequest).then success, failure
 
     @orgSelect.on 'change', (e) =>
       $.proxy(@selectOrg,@)(e)
@@ -246,7 +247,7 @@ module.exports = backbone.View.extend
       complete: ()->
         spinner.unblockUI()
 
-  changeAdUser: (e) ->
+  changeIdProvider: (e) ->
     identityProvider = @identityProviderSelect.val()
 
     @requestJson.identityProvider = identityProvider

@@ -70,16 +70,15 @@ cfapi.allUsers = (req,res) ->
   , (error) ->
     console.log("Unauthenticated user attempt to fetch all users")
 
-cfapi.samlIdentityProviders = (req,res) ->
+cfapi.externalIdentityProvider = (req,res) ->
   fetchUser(req,res).then (userinfo)->
-    if(services["cloud_foundry_api-saml-provider"]?.value)
-      res.status(200).send [ services["cloud_foundry_api-saml-provider"]?.value ]
+    if(services["cloud_foundry_api-external-identity-provider"]?.value)
+      res.status(200).send [ services["cloud_foundry_api-external-identity-provider"]?.value ]
     else
       res.status(200).send [  ]
   , (error) ->
-    res.status(401).send("Unauthenticated user attempt to fetch saml identity providers")
-    console.log("Unauthenticated user attempt to fetch saml identity providers")
-
+    res.status(401).send("Unauthenticated user attempt to fetch identity provider")
+    console.log("Unauthenticated user attempt to fetch identity provider")
 
 doRole = (method,token,level,levelGuid,associationType,associationGuid)->
   new Promise (resolve,reject)->
