@@ -47,7 +47,7 @@ cf cups  cloud_foundry_api -p '{  "alias": "cloud_foundry_api",
                                   "portal-admin-id" : "<administrator user id Base64 encoded>",
                                   "portal-admin-pw" : "<administror user password  Base64 encoded>" ,
                                   "default-email-domain" : "<email domain of active directory users for example who@cloudfoundry.com would have an email domain of cloudfoundry.com>",
-                                  "saml-provider" : "<saml provider name, this field is optional>" }'
+                                  "external-identity-provider" : "<identity provider name, this field is optional. ex: ldap, ping-federate>" }'
                                   "user-name-type" : "<type of username for users created through cf-users.  email or samaccountname>" }'
                                                              
 ```
