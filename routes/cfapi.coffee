@@ -19,7 +19,7 @@ cfapi.allOrganizations = (req,res) ->
 cfapi.listUserAssociation = (req,res)->
   fetchUser(req,res).then (userInfo)->
     adminOauth.refreshToken (token) ->
-      fetchListCfRequest("Bearer #{token.token.access_token}",[], "users",req.params.userGuid, req.params.associationType, req.query?.q, 1).then (values)=>
+      fetchListCfRequest("Bearer #{token?.token?.access_token}",[], "users",req.params.userGuid, req.params.associationType, req.query?.q, 1).then (values)=>
         res.json
           total_pages: 1
           resources: values

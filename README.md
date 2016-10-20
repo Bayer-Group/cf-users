@@ -49,7 +49,7 @@ cf cups  cloud_foundry_api -p '{  "alias": "cloud_foundry_api",
                                   "default-email-domain" : "<email domain of active directory users for example who@cloudfoundry.com would have an email domain of cloudfoundry.com>",
                                   "saml-provider" : "<saml provider name, this field is optional>" }'
                                   "user-name-type" : "<type of username for users created through cf-users.  email or samaccountname>" }'
-                                                             
+
 ```
 The guids can be retrieved utilizing the uaac users command.
 
@@ -68,31 +68,42 @@ cf start cf-users
 ```
 
 ## Running locally.
-  
+
   Update gulpfile.coffee to set the  values in the VCAP_SERVICES environment variable corresponding to the cloud_foundry_api service configured above.
-  
+
   create and cd to  the certs directory and run the following commands:
-  
-  openssl genrsa -out localhost.key 1024 
+
+  openssl genrsa -out localhost.key 1024
 
   openssl req -new -key localhost.key -out certrequest.csr
 
   openssl x509 -req -in certrequest.csr -signkey localhost.key -out localhost.cert
-  
+
   Then run the following commands:
-  
+
   npm install
   npm run dev
 
 ## Running unit tests
-  To run the tests onetime run the following command: 
-  
+  To run the tests onetime run the following command:
+
   npm run test
-  
+
   To run the tests continuously as you work on the code run the following command:
-  
-  
+
+
   npm run test:dev
+
+
+## Extra Debug Logging
+
+Set the environment variable `NODE_DEBUG` to OAUTH to print all lines in adminOauth.coffee that use the debuglog function.
+Be careful!  This will print out secrets and passwords.  Use it to only debug token issues.
+
+To use it locally:
+
+  NODE_DEBUG=OAUTH npm run dev
+
 ## <a name="using"></a> Using the CF Users UI
 
 ![User Role Admin](./images/UserRoleAdmin.jpg)
