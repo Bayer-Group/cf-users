@@ -227,7 +227,7 @@ module.exports = backbone.View.extend
     else if(XMLHttpRequest.status == 403)
       bootbox.alert(XMLHttpRequest.responseJSON.description)
     else
-      bootbox.alert("There was an error when adding user.\nPlease verify privileges on edit user screen.")
+      bootbox.alert("There was an error when adding user.\n\n" + XMLHttpRequest.responseText)
 
 
 
