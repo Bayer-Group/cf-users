@@ -1,11 +1,12 @@
 Promise = require 'promise'
 adminOauth = require "./AdminOauth"
+uaaadminOauth = require "./uaaAdminOauth"
 services = require "./serviceBindings"
 requestjs = require 'request'
 
-
-adminOauth.initOauth2()
 cfapi = {}
+adminOauth.initOauth2()
+uaaadminOauth.initOauth2()
 
 cfapi.allOrganizations = (req,res) ->
   fetchAllOrganizations(req.headers['authorization'],[],1).then (orgs)=>
@@ -15,6 +16,16 @@ cfapi.allOrganizations = (req,res) ->
   , (error)->
     res.status(500).send(error)
     reject(error)
+
+cfapi.adminOrganizations = (req,res) ->
+  adminOauth.refreshToken (token) ->
+    fetchAllOrganizations("Bearer #{token.token.access_token}",[],1).then (orgs)=>
+      res.json
+        resources: orgs
+      resolve(orgs)
+    , (error)->
+      res.status(500).send(error)
+      reject(error)
 
 cfapi.listUserAssociation = (req,res)->
   fetchUser(req,res).then (userInfo)->
@@ -30,13 +41,14 @@ cfapi.listUserAssociation = (req,res)->
     console.log("Unauthenticated user attempt to call listUserAccociation")
 
 cfapi.listCfRequest = (req,res)->
-  fetchListCfRequest(req.headers['authorization'],[], req.params.level,req.params.levelGuid, req.params.associationType, req.query?.q, 1).then (values)=>
-    res.json
-      total_pages: 1
-      resources: values
-  ,(error)->
-    res.sendStatus(500).send(error)
-    reject(error)
+  adminOauth.refreshToken (token) ->
+    fetchListCfRequest("Bearer #{token.token.access_token}",[], req.params.level,req.params.levelGuid, req.params.associationType, req.query?.q, 1).then (values)=>
+      res.json
+        total_pages: 1
+        resources: values
+    ,(error)->
+      res.sendStatus(500).send(error)
+      reject(error)
 
 cfapi.userInfo = (req,res)->
   fetchUser(req,res).then (userInfo)->
@@ -61,6 +73,19 @@ cfapi.allUsers = (req,res) ->
   fetchUser(req,res).then (userinfo)->
     adminOauth.refreshToken (token) ->
       fetchAllUsers(token,[],  1).then (values)=>
+        res.json
+          total_pages : 1
+          resources: values
+      ,(error)->
+        res.sendStatus(500).send(error)
+        reject(error)
+  , (error) ->
+    console.log("Unauthenticated user attempt to fetch all users")
+
+cfapi.allUAAUsers = (req,res) ->
+  fetchUser(req,res).then (userinfo)->
+    uaaadminOauth.refreshToken (token) ->
+      fetchAllUAAUsers(token,[],  1).then (values)=>
         res.json
           total_pages : 1
           resources: values
@@ -184,7 +209,7 @@ cfapi.createUser = (req,res) ->
          if(!error && response.statusCode == 200 && responseBody["total_results"] > 0)
            orgAuthToken = token.token.access_token
 
-         doPost("https://#{services["cloud_foundry_api-uaa-domain"].value}/Users",token,buildUaacRequest(req)).then (response)->
+         doPost("https://#{services["cloud_foundry_api-uaa-domain"].value}/Users",token,buildUaacCreateUserRequest(req)).then (response)->
             userId = response.body.id
             doPost("https://#{services["cloud_foundry_api-domain"].value}/v2/users",token, { "guid" : userId }).then (response)->
               orgGuid = req.body.org.guid
@@ -217,8 +242,17 @@ cfapi.createUser = (req,res) ->
     console.log("Unauthenticated user attempted to createUser")
     res.status(403).send("verboten")
 
-
-buildUaacRequest = (req)->
+cfapi.changePassword = (req,res) ->
+  uaaadminOauth.refreshToken (uaatoken) ->
+    doPut("https://#{services["cloud_foundry_api-uaa-domain"].value}/Users/#{req.body.userId}/password",uaatoken,buildUaacChangePasswordRequest(req)).then (response)->
+      res.status(response.status).send(response.body)
+    , (response)->
+      res.status(response.status).send(response.body)
+  , (error)->
+    console.log("Unauthenticated user attempted to createUser")
+    res.status(403).send("verboten")
+  
+buildUaacCreateUserRequest = (req)->
   userId =req.body.userId
   identityProvider = req.body.identityProvider
   password = if req.body.password then req.body.password else ""
@@ -234,7 +268,7 @@ buildUaacRequest = (req)->
     when "samaccountname" then lowerId
     else email
 
-  uaacRequest =
+  uaacCreateUserRequest =
     "schemas":["urn:scim:schemas:core:1.0"]
     "userName": username
     "name":
@@ -248,10 +282,20 @@ buildUaacRequest = (req)->
     "verified":  true
     "origin": identityProvider
   if (identityProvider=="uaa")
-     uaacRequest["password"] = password
+     uaacCreateUserRequest["password"] = password
   if (identityProvider!="uaa"&&identityProvider!="ldap")
-     uaacRequest["externalId"]= email
-  uaacRequest
+     uaacCreateUserRequest["externalId"]= email
+  uaacCreateUserRequest
+
+buildUaacChangePasswordRequest = (req)->
+  userId =req.body.userId
+  oldpassword = if req.body.oldpassword then req.body.oldpassword else ""
+  newpassword = if req.body.newpassword then req.body.newpassword else ""
+  
+  uaacChangePasswordRequest =
+    "oldPassword":"#{oldpassword}"
+    "password":"#{newpassword}"
+  uaacChangePasswordRequest
 
 fetchAllUsers = (token, usersToReturn, page)->
   new Promise (resolve,reject) ->
@@ -273,10 +317,32 @@ fetchAllUsers = (token, usersToReturn, page)->
       else
         reject(error)
 
-fetchAllOrganizations = (token,orgsToReturn,page)->
+fetchAllUAAUsers = (token, usersToReturn, page)->
   new Promise (resolve,reject) ->
     options =
-      url: "https://#{services["cloud_foundry_api-domain"].value}/v2/organizations?order-direction=asc&page=#{page}&results-per-page=50"
+      url: "https://#{services["cloud_foundry_api-uaa-domain"].value}/Users?filter=origin+eq+%22uaa%22&count=50&sortOrder=ascending&startIndex=#{page}"
+      headers: {'Authorization': "Bearer " + token.token.access_token}
+    requestjs options, (error,response,body) ->
+      if(!error && response.statusCode == 200)
+        users = JSON.parse(body)
+        usersToReturn.push user for user in users.resources
+        if((page+50)<users.totalResults)
+          fetchAllUAAUsers(token,usersToReturn,page+50).then ()=>
+            resolve(usersToReturn)
+          , (error)=>
+            reject(error)
+        else
+          resolve(usersToReturn)
+      else
+        reject(error)
+
+fetchAllOrganizations = (token,orgsToReturn,page) ->
+  fetchOrganizations(token, orgsToReturn, page, "https://#{services["cloud_foundry_api-domain"].value}/v2/organizations")
+
+fetchOrganizations = (token,orgsToReturn,page,url)->
+  new Promise (resolve,reject) ->
+    options =
+      url: "#{url}?order-direction=asc&page=#{page}&results-per-page=50"
       headers: {'Authorization': token}
 
     requestjs options, (error,response,body) ->
@@ -292,7 +358,7 @@ fetchAllOrganizations = (token,orgsToReturn,page)->
               metadata :
                 guid : org.metadata.guid
         if(page<pages)
-          fetchAllOrganizations(token,orgsToReturn,page+1).then ()=>
+          fetchOrganizations(token,orgsToReturn,page+1,url).then ()=>
             resolve(orgsToReturn)
           , (error)=>
             reject(error)

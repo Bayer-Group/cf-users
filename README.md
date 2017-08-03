@@ -16,7 +16,7 @@ uaac client add cf_portal_client \
  --authorities scim.write,scim.read,cloud_controller.read,cloud_controller.write,password.write,uaa.admin,uaa.resource,clo
 ud_controller.admin \
  --authorized_grant_types authorization_code,client_credentials,password \
- --redirect-uri https://this-app-name.cf.example.com \
+ --redirect-uri https://localhost:3000 https://this-app-name.cf.example.com \
  --autoapprove true \
  --scope openid,scim.write,scim.read,cloud_controller.read,cloud_controller.write,password.write,console.admin,console.sup
 port,cloud_controller.admin \
@@ -74,16 +74,18 @@ cf start cf-users
 
   create and cd to  the certs directory and run the following commands:
 
+```
   openssl genrsa -out localhost.key 1024
-
   openssl req -new -key localhost.key -out certrequest.csr
-
   openssl x509 -req -in certrequest.csr -signkey localhost.key -out localhost.cert
+```
 
   Then run the following commands:
 
+```
   npm install
   npm run dev
+```
 
 ## Running unit tests
   To run the tests onetime run the following command:

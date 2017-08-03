@@ -9,14 +9,17 @@ router.use (req,res,next) ->
 
 
 router.get '/organizations', cfapi.allOrganizations
+router.get '/organizations_all', cfapi.adminOrganizations
 router.get '/userinfo', cfapi.userInfo
 router.post '/users', cfapi.createUser
+router.post '/password', cfapi.changePassword
 router.put '/organizations/:levelGuid/users/:associationGuid', cfapi.putOrgUser
 router.put '/:level/:levelGuid/:associationType/:associationGuid', cfapi.putRole
 router.delete '/:level/:levelGuid/:associationType/:associationGuid', cfapi.deleteRole
 router.get '/users/:userGuid/:associationType', cfapi.listUserAssociation
 router.get '/:level/:levelGuid/:associationType', cfapi.listCfRequest
 router.get '/users', cfapi.allUsers
+router.get '/uaausers', cfapi.allUAAUsers
 router.get '/identityProviders/saml', cfapi.samlIdentityProviders
 module.exports = router;
 

@@ -26,11 +26,15 @@ ao.initOauth2 = ->
     console.log 'initializing the oauth2 library...'
     oauth2 = require('simple-oauth2') credentials
 
+    tokenConfig = 
+      username: "#{services["cloud_foundry_api-portal-admin-id"].b64}",
+      password: "#{services["cloud_foundry_api-portal-admin-pw"].b64}"
+
     ao.token = null
     # Save the access token
-    saveToken = (error, result) ->
-      debuglog 'saveToken: error', util.inspect error, depth: null
-      debuglog 'saveToken: result', util.inspect result, depth: null
+    oauth2.password.getToken tokenConfig, (error, result) ->
+      debuglog 'getToken: error', util.inspect error, depth: null
+      debuglog 'getToken: result', util.inspect result, depth: null
       if error
         debuglog 'Access Token Error', JSON.stringify(error,0,2)
         reject "error fetching access token"
@@ -45,11 +49,6 @@ ao.initOauth2 = ->
     username = services["cloud_foundry_api-portal-admin-id"].b64
     password = services["cloud_foundry_api-portal-admin-pw"].b64
     debuglog "Attemping to log in with #{username}:#{password} and credentials of: ", credentials
-
-    oauth2.password.getToken({
-      username: "#{username}",
-      password: "#{password}"
-    }, saveToken)
 
 ao.refreshToken = (method) ->
   debuglog 'refreshToken: the current ao.token:', util.inspect ao.token, depth: null

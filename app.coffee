@@ -52,6 +52,7 @@ app.use "/#{contextRoot}/cf-api", cfapiRouter
 app.use "/#{contextRoot}/roles", routes
 app.use "/#{contextRoot}/adduser", routes
 app.use "/#{contextRoot}/edituser", routes
+app.use "/#{contextRoot}/changepassword", routes
 app.use "/", (req,res,next)->
   res.redirect(301, "/#{contextRoot}/roles")
 app.use "/#{contextRoot}/", (req,res,next)->

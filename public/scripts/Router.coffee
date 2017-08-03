@@ -5,6 +5,7 @@ ContainerView = require './views/ContainerView'
 RolesView = require './views/RolesView'
 EditUserView = require './views/EditUserView'
 AddUserView = require './views/AddUserView'
+ChangePasswordView = require './views/ChangePasswordView'
 module.exports =  backbone.Router.extend
   initialize : (options) ->
     @options = options
@@ -29,6 +30,7 @@ module.exports =  backbone.Router.extend
     "cf-users/roles" : "roles"
     "cf-users/adduser" : "adduser"
     "cf-users/edituser" : "edituser"
+    "cf-users/changepassword" : "changepassword"
 
   roles : () ->
     if(@view)
@@ -53,4 +55,14 @@ module.exports =  backbone.Router.extend
     @view = new EditUserView(@options);
     @containerView.$('.appcontainer').html(@view.$el);
     @view.render();
+
+  changepassword: () ->
+    if(@view)
+      @view.remove()
+    @options.userData = @userData;
+    @view = new ChangePasswordView(@options);
+    @containerView.$('.appcontainer').html(@view.$el);
+    @view.render();
+
+
 

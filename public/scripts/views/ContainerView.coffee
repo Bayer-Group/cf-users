@@ -15,6 +15,7 @@ template = (options) ->
               <li #{ active if tab is 'roles'}><a href="roles"  data-toggle="tab" class="roles_tab">User Role Admin</a></li>
               <li #{ active if tab is 'edituser'}><a href="edituser"   data-toggle="tab"  class="user_roles_tab" >Edit User</a></li>
               <li #{ active if tab is 'adduser'}><a href="adduser"   data-toggle="tab"  class="adduser_tab" >Add User</a></li>
+              <li #{ active if tab is 'changepassword'}><a href="changepassword"   data-toggle="tab"  class="changepassword_tab" >Change Password</a></li>
           </ul>
           <div class="collapse navbar-collapse">
               <ul class="nav navbar-nav navbar-right">
