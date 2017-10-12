@@ -69,6 +69,7 @@ module.exports = backbone.View.extend
     @$el.html template
     @$('[data-toggle="tooltip"]').tooltip()
     @$('.user-id').on "keyup", $.proxy(@changeUserId,@)
+    @$('.oldpassword').on "keyup", $.proxy(@setOldPassword,@)
     @$('.password').on "keyup", $.proxy(@verifyPassword,@)
     @$('.password2').on "keyup", $.proxy(@verifyPassword,@)
     
@@ -147,13 +148,15 @@ module.exports = backbone.View.extend
     else
       @$('.password').parent().removeClass("has-error")
       @$('.password2').parent().removeClass("has-error")
-      @requestJson.oldpassword = @$('.oldpassword').val()
       @requestJson.newpassword = @$('.password').val()
     @setChangepassButtonState()
 
   changeUserId : (e) ->
     @requestJson.userId =  $(e.target).val()
     @setChangepassButtonState()
+ 
+  setOldPassword : (e) ->
+    @requestJson.oldpassword = @$('.oldpassword').val()
 
   setChangepassButtonState: ->
-    @$('.update-pass-button').prop("disabled",!(@requestJson.userId&&@requestJson.newpassword))
+    @$('.update-pass-button').prop("disabled",!(@requestJson.userId&&@requestJson.newpassword&&@requestJson.oldpassword))
